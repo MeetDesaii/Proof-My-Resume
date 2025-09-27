@@ -60,7 +60,7 @@ router.post(
 
       const resume = await prisma.resume.create({
         data: {
-          userId: req.user?.userId || "",
+          userId: req.user!.userId,
           fileName: req.file.originalname,
           fileUrl,
           parsedContent: parsedContent as any,
@@ -115,7 +115,7 @@ router.get(
   async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const resumes = await prisma.resume.findMany({
-        where: { userId: req.user?.userId },
+        where: { userId: req.user!.userId },
         orderBy: { createdAt: "desc" },
         select: {
           id: true,
@@ -141,8 +141,8 @@ router.get(
 
       const resume = await prisma.resume.findFirst({
         where: {
-          id,
-          userId: req.user?.userId,
+          id: id as string,
+          userId: req.user!.userId,
         },
         include: {
           tailoredVersions: {
@@ -173,8 +173,8 @@ router.delete(
 
       const resume = await prisma.resume.findFirst({
         where: {
-          id,
-          userId: req.user?.userId,
+          id: id as string,
+          userId: req.user!.userId,
         },
       });
 
@@ -183,7 +183,7 @@ router.delete(
       }
 
       await prisma.resume.delete({
-        where: { id },
+        where: { id: id as string },
       });
 
       res.json({ message: "Resume deleted successfully" });

@@ -15,6 +15,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { toast } from "sonner";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function LoginForm({
   className,
@@ -24,7 +25,7 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
@@ -32,6 +33,7 @@ export function LoginForm({
     try {
       await login({ email, password });
       toast.success("Logged in successfully");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login failed", error);
       toast.error("Unable to log in. Please check your credentials.");

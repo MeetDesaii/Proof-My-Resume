@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
+import { Providers } from "@/components/providers";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,22 +30,27 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="min-h-screen w-full relative">
-          <div
-            className="absolute inset-0 -z-50"
-            style={{
-              backgroundImage: `
-        linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-        linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
-      `,
-              backgroundSize: "40px 40px",
-            }}
-          />
-          <div className="z-50 container mx-auto">
-            <Header />
-            {children}
+        <Providers>
+          <Toaster position="bottom-right" />
+
+          <div className="min-h-screen w-full relative">
+            {/* <div
+              className="absolute inset-0 -z-50"
+              style={{
+                backgroundImage: `
+              linear-gradient(to right, #ccc 1px, transparent 1px),
+              linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
+              `,
+                backgroundSize: "40px 40px",
+              }}
+            /> */}
+
+            <div className="z-50 container mx-auto">
+              <Header />
+              {children}
+            </div>
           </div>
-        </div>
+        </Providers>
       </body>
     </html>
   );

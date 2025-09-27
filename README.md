@@ -97,7 +97,7 @@ Ensure you have the following installed:
    In the `client` directory:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
    The application should now be running at [http://localhost:3000](http://localhost:3000).

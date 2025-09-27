@@ -110,7 +110,7 @@ export function ATSAnalysis({
         <Button
           className="w-max mt-4"
           onClick={() => onTailor(jobTitle, company)}
-          disabled={!jobTitle || !company || isTailoring}
+          disabled={true}
         >
           {isTailoring ? "Generating..." : "Generate Tailored Resume"}
         </Button>

@@ -337,3 +337,37 @@ model JobDescription {
   @@index([title])
   @@index([company])
 }
+
+model MatchEvaluation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  // Overall scores
+  matchingScore Int
+  atsScore      Int
+
+  // Category scores (JSON for forward-compat)
+  categoryScores Json // { qualifications_match, responsibilities_match, keyword_match, job_title_match, technical_skills, experience, soft_skills, domain_knowledge }
+
+  // Suggestions by priority
+  suggestions Json // { high_priority: string[], moderate_priority: string[], minor_priority: string[] }
+
+  matchedKeywords String[]
+  missingKeywords String[] // to be added in resume
+
+  synonymSuggestions Json? // { keyword: [synonyms...] }
+
+  gapAnalysis Json? // { hard_gaps: string[], partial_gaps: string[] }
+  atsFlags    String[]
+  strengths   String[]
+
+  // Deterministic hash of (resumeId + jobDescriptionId + version) to dedupe
+  dedupeHash String @unique
+
+  @@index([matchingScore])
+  @@index([atsScore])
+}

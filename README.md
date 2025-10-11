@@ -1,10 +1,12 @@
-# Proof-My-Resume
+# Visume AI
 
-**An intelligent resume optimization tool powered by AI and natural language processing.**
+**An intelligent resume optimization tool powered by AI and NLP, and Multisource verification by AI Agents.**
+
+**Goal Tracker - https://www.notion.so/289a33133a3a80f8a630d2edf775009e?v=289a33133a3a8016834f000c66b9daf6**
 
 ## 🚀 Overview
 
-**Proof-My-Resume** is a web application that analyzes and enhances resumes to increase their chances of passing Applicant Tracking Systems (ATS). By leveraging AI and NLP, it assesses resumes against job descriptions, providing actionable insights and recommendations for improvement.
+**Visume AI** is a web application that analyzes and enhances resumes to increase their chances of passing Applicant Tracking Systems (ATS). By leveraging AI and NLP, it assesses resumes against job descriptions, providing actionable insights and recommendations for improvement.
 
 ## 🧩 Features
 

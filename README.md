@@ -12,18 +12,19 @@
 
 - **ATS Compatibility Analysis**: Evaluates how well a resume aligns with ATS algorithms.
 - **Keyword Optimization**: Identifies missing keywords and suggests additions to match job descriptions.
-- **End-to-End Authentication**: Authentication flow uses JWT tokens for secure and encrypted authentication. 
+- **End-to-End Authentication**: Authentication flow uses Clerk for secure and encrypted authentication. 
 - **Formatting Recommendations**: Advises on formatting changes to improve readability and ATS parsing.
+- **AI Agents**: To verify all the contained information.
 - **Real-Time Feedback**: Provides instant suggestions as users upload their resumes.
 - **Multi-Format Support**: Accepts resumes in various formats, including PDF and DOCX.
 
 ## ⚙️ Tech Stack
 
-- **Frontend**: NextJS 15 with App Router, TypeScript, Tailwind CSS
-- **Backend**: Node.js, Express.js, Prisma, OpenAI
-- **AI/NLP**: OpenAI GPT-5 mini
-- **Database**: Postgres, NeonDB
-- **Authentication**: JWT (JSON Web Tokens)
+- **Frontend**: NextJS 15 with App Router, TypeScript, Tailwind CSS, Shadcn
+- **Backend**: Node.js, Express.js, MongoDB, Mangoose, OpenAI
+- **AI/NLP**: OpenAI GPT-4.1 mini, OpenAI GPT-4.1
+- **Database**: Postgres, MongoDB
+- **Authentication**: Clerk
 - **File Parsing**: pdf-parse, mammoth.js
 - **Storage**: AWS S3 Bucket
   
@@ -40,66 +41,76 @@ Ensure you have the following installed:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/MeetDesaii/Proof-My-Resume.git
-   cd Proof-My-Resume
+   git clone https://github.com/MeetDesaii/Visume-AI-Dev.git
+   cd Visume-AI-Dev
 
 2. **Install Dependencies**
 
-   For the client:
-
    ```bash
-   cd client
-   npm install
-   ```
-
-   For the server:
-
-   ```bash
-   cd server
-   npm install
+   pnpm i
    ```
 
 3. **Environment Variables**
 
-   Create a `.env` file in both the `client` directory with the following variables:
+   Create a `.env.development` file in both the `apps/api` directory with the following variables:
 
    ```env
-    DATABASE_URL="your-database-connection-string"
-    NEXT_PUBLIC_API_URL=http://localhost:4000/api
+    NODE_ENV=development
+
+    # Server Configuration
+    PORT=4000
+    HOST=localhost
+    FRONTEND_URL=http://localhost:3000
+    
+    # Database
+    MONGODB_URI=" "
+    
+    # Redis (Optional - for caching and rate limiting)
+    REDIS_URL=redis://localhost:6379
+    # REDIS_PASSWORD=
+    
+    # Clerk Authentication (Required)
+    CLERK_PUBLISHABLE_KEY=" "
+    CLERK_SECRET_KEY=" "
+    CLERK_WEBHOOK_SECRET=" "
+    
+    # OpenAI API (Required)
+    OPENAI_API_KEY=" "
+   
+    # Email Configuration (Optional - for notifications)
+    SMTP_HOST=smtp.gmail.com
+    SMTP_PORT=587
+    SMTP_USER=visumeai@gmail.com
+    SMTP_PASS=" "
+    EMAIL_FROM="Visume AI <noreply@visume.ai>"
+    
+    
+    # Logging
+    LOG_DIR=logs
+    LOG_LEVEL=debug
    ```
    
-   Create a `.env` file in both the `server` directory with the following variables:
+   Create a `.env` file in both the `apps/web` directory with the following variables:
   
    ```env
-    DATABASE_URL="your-database-connection-string"
-    NODE_ENV=development
-    PORT=4000
+    NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+    NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/dashboard
     
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=" "
+    CLERK_SECRET_KEY=" "
+     
     
-    JWT_SECRET="your-super-secret-jwt-key-change-this"
-    OPENAI_API_KEY="openAIk-key"
-    
-    FRONTEND_URL="http://localhost:3000"
-    
-    # AWS S3 (for file storage)
-    AWS_ACCESS_KEY_ID=""
-    AWS_SECRET_ACCESS_KEY=""
-    AWS_REGION=""
-    AWS_S3_BUCKET=""
+    NEXT_PUBLIC_API_BASE_URL=http://localhost:4000/api
    ```
 
 4. **Run the Application**
 
-   In the `server` directory:
-
    ```bash
-   npm run dev
-   ```
-
-   In the `client` directory:
-
-   ```bash
-   npm run dev
+   pnpm dev
    ```
 
    The application should now be running at [http://localhost:3000](http://localhost:3000).

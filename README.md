@@ -23,7 +23,7 @@
 - **Frontend**: NextJS 15 with App Router, TypeScript, Tailwind CSS, Shadcn
 - **Backend**: Node.js, Express.js, MongoDB, Mangoose, OpenAI
 - **AI/NLP**: OpenAI GPT-4.1 mini, OpenAI GPT-4.1
-- **Database**: Postgres, MongoDB
+- **Database**: MongoDB
 - **Authentication**: Clerk
 - **File Parsing**: pdf-parse, mammoth.js
 - **Storage**: AWS S3 Bucket

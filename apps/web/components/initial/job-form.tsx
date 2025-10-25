@@ -13,10 +13,10 @@ import {
 import { Input } from "@visume/ui/components/input";
 import { Button } from "@visume/ui/components/button";
 import { Textarea } from "@visume/ui/components/textarea";
-import type { SetupProgress, InitialSetupDetails } from "@visume/types/web";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Loader2 } from "lucide-react";
+import { InitialSetupDetails, SetupProgress } from "@/app/initial/page";
 
 export const formSchema = z.object({
   title: z.string().min(2).max(50),

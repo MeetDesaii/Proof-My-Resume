@@ -2,7 +2,7 @@
 
 export default {
   reactStrictMode: true,
-  transpilePackages: ["@visume/ui", "@visume/shared-types"],
+  transpilePackages: ["@visume/ui", "@visume/types"],
   images: {
     remotePatterns: [
       {

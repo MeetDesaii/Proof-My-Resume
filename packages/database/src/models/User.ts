@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 import {
-  AUTH_PROVIDERS,
-  SUBSCRIPTION_TIERS,
   UserAuthProvider,
   UserSubscription,
   UserProfile,
@@ -49,7 +47,6 @@ const UserSchema = new Schema<IUser>(
       {
         provider: {
           type: String,
-          enum: AUTH_PROVIDERS,
         },
         email: String,
       },
@@ -57,7 +54,6 @@ const UserSchema = new Schema<IUser>(
     subscription: {
       tier: {
         type: String,
-        enum: SUBSCRIPTION_TIERS,
         default: "free",
       },
       validUntil: Date,

@@ -3,13 +3,12 @@
  */
 
 import type { ObjectId, Timestamps } from "./common";
-import type { SubscriptionTier, AuthProvider } from "../enums";
 
 /**
  * Auth provider information
  */
 export interface UserAuthProvider {
-  provider: AuthProvider;
+  provider: any;
   email?: string;
 }
 
@@ -17,7 +16,7 @@ export interface UserAuthProvider {
  * User subscription details
  */
 export interface UserSubscription {
-  tier: SubscriptionTier;
+  tier: any;
   validUntil?: Date;
   creditsRemaining: number;
   monthlyCredits: number;

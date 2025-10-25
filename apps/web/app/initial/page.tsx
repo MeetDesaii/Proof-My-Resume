@@ -4,9 +4,16 @@ import JobForm from "@/components/initial/job-form";
 import ProccessScreen from "@/components/initial/proccess-screen";
 import ResumeUpload from "@/components/initial/resume-upload";
 import { useState } from "react";
-import type { SetupProgress, InitialSetupDetails } from "@visume/types/web";
-import { Button } from "@visume/ui/components/button";
-import { useAuth } from "@clerk/nextjs";
+
+export type InitialSetupDetails = {
+  resume?: any;
+  job?: any;
+};
+export type SetupProgress = {
+  step: number;
+  form: string;
+  hasCompleted: string[];
+};
 
 export default function InitialSetupPage() {
   const [resumeAndJobDetails, setResumeAndJobDetails] =

@@ -63,7 +63,8 @@ export function useBreadcrumbs(): BreadcrumbItem[] {
         });
       } else {
         // Generic segment (capitalize first letter)
-        const label = segment.charAt(0).toUpperCase() + segment.slice(1);
+        const label = ((segment?.charAt(0).toUpperCase() as any) +
+          segment?.slice(1)) as any;
         items.push({
           label,
           href: currentPath,

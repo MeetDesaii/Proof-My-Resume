@@ -1,11 +1,11 @@
 "use client";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useMutation } from "@tanstack/react-query";
-import { InitialSetupDetails } from "@visume/types";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { InitialSetupDetails } from "@/app/initial/page";
 
 type JobDescriptionMutationPayload = {
   title: string;

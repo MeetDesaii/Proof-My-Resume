@@ -1,6 +1,5 @@
 "use client";
 
-import type { SetupProgress, InitialSetupDetails } from "@visume/types/web";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { ArrowRight, Upload } from "lucide-react";
@@ -11,6 +10,7 @@ import { Button } from "@visume/ui/components/button";
 import axios from "axios";
 import { useApiClient } from "@/hooks/use-api-client";
 import { useAuth, useUser } from "@clerk/nextjs";
+import { InitialSetupDetails, SetupProgress } from "@/app/initial/page";
 // import extractText from "@/actions/extractText";
 
 export default function ResumeUpload({

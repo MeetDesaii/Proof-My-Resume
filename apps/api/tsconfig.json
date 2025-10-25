@@ -1,0 +1,13 @@
+{
+  "extends": "@visume/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "files": true
+  },
+  "files": ["./src/types/express.d.ts"]
+}

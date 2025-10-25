@@ -1,0 +1,41 @@
+{
+  "name": "@visume/ai-core",
+  "version": "2.0.0",
+  "description": "Comprehensive AI service package for resume optimization and analysis",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "dependencies": {
+    "@langchain/community": "^0.3.57",
+    "@langchain/core": "^0.3.78",
+    "@langchain/openai": "^0.6.16",
+    "@langchain/textsplitters": "^1.0.0",
+    "openai": "^6.3.0",
+    "p-retry": "^7.1.0",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "@visume/typescript-config": "workspace:*",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.3"
+  }
+}

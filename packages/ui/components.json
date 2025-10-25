@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@visume/ui/components",
+    "utils": "@visume/ui/lib/utils",
+    "hooks": "@visume/ui/hooks",
+    "lib": "@visume/ui/lib",
+    "ui": "@visume/ui/components"
+  }
+}

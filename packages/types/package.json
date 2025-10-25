@@ -1,0 +1,35 @@
+{
+  "name": "@visume/types",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared TypeScript types and interfaces for Visume AI v3",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "mongoose": "^8.10.5",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "@visume/eslint-config": "workspace:*",
+    "@visume/typescript-config": "workspace:*",
+    "typescript": "^5.9.2"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./models": "./src/models/index.ts",
+    "./models/*": "./src/models/*.ts",
+    "./enums": "./src/enums/index.ts",
+    "./enums/*": "./src/enums/*.ts",
+    "./api": "./src/api/index.ts",
+    "./api/*": "./src/api/*.ts",
+    "./ai": "./src/ai/index.ts",
+    "./ai/*": "./src/ai/*.ts",
+    "./web": "./src/web/index.ts",
+    "./web/*": "./src/web/*.ts",
+    "./common": "./src/common/index.ts",
+    "./common/*": "./src/common/*.ts"
+  }
+}

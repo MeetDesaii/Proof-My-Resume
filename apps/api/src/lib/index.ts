@@ -26,7 +26,7 @@ export function transformAIResponseForDB(
       startDate: convertStringToDate(cert.startDate),
       expiryDate: convertStringToDate(cert.expiryDate),
     })),
-  } as ResumeExtraction;
+  } as unknown as ResumeExtraction;
 }
 
 export function isValidMongoId(id: string) {

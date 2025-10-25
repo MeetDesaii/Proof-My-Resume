@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import path from "path";
-import { existsSync } from "fs";
 
 /**
  * Load environment variables based on NODE_ENV
@@ -11,21 +10,12 @@ function loadEnvironment() {
   const nodeEnv = process.env.NODE_ENV || "development";
   const envFile =
     nodeEnv === "production"
-      ? ".env.production"
+      ? ".env"
       : nodeEnv === "test"
         ? ".env.test"
-        : ".env.development";
+        : ".env";
 
   const envPath = path.resolve(process.cwd(), envFile);
-
-  // Check if env file exists
-  if (!existsSync(envPath)) {
-    console.warn(
-      `⚠️  Warning: Environment file not found: ${envFile}\n` +
-        `   Expected location: ${envPath}\n` +
-        `   Please create it by copying .env.example`
-    );
-  }
 
   // Load environment variables
   const result = dotenv.config({ path: envPath });

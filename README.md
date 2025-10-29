@@ -19,6 +19,7 @@ pnpm dlx shadcn@latest add button -c apps/web
 This will place the ui components in the `packages/ui/src/components` directory.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **Frontend**: NextJS 15 with App Router, TypeScript, Tailwind CSS, Shadcn
 - **Backend**: Node.js, Express.js, MongoDB, Mangoose, OpenAI
 - **AI/NLP**: OpenAI GPT-4.1 mini, OpenAI GPT-4.1
@@ -28,6 +29,9 @@ This will place the ui components in the `packages/ui/src/components` directory.
 - **Storage**: AWS S3 Bucket
   
 ## 🛠️ Installation
+=======
+## Tailwind
+>>>>>>> Stashed changes
 =======
 ## Tailwind
 >>>>>>> Stashed changes

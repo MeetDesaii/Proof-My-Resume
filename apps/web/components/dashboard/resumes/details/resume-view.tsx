@@ -8,7 +8,7 @@ import { ScrollArea } from "@visume/ui/components/scroll-area";
 export default function ResumeView({ resume }: { resume: ResumeWithOutJob }) {
   return (
     <div className="h-full flex flex-col">
-      <div className="h-13 border-b bg-muted flex items-center px-4">
+      <div className="h-11 border-b bg-muted flex items-center px-4">
         <div className="font-bold">
           {resume.job.company.name} - {resume.job.title}
         </div>

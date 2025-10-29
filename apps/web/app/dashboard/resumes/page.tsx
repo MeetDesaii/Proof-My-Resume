@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@visume/ui/components/button";
 import {
   Empty,
@@ -11,28 +13,41 @@ import Link from "next/link";
 import { File, Plus } from "lucide-react";
 import ResumeCard from "@/components/dashboard/resumes/resume-card";
 
-import { getServerApiClient } from "@/lib/axios/server";
 import { ResumeDTO } from "@visume/types";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useApiClient } from "@/hooks/use-api-client";
+import { useQuery } from "@tanstack/react-query";
 
-async function getUserResume() {
-  const api = getServerApiClient();
+export default function ResumesPage() {
+  const api = useApiClient();
+  const router = useRouter();
 
-  const res = await api.get(`/resumes`);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["resumes-list"],
+    queryFn: async () => {
+      const res = await api.get(`/resumes`);
+      return res.data;
+    },
+  });
 
-  return res.data;
-}
+  if (isLoading) {
+    return (
+      <div className="container mx-auto w-full max-w-7xl mt-10">Loading...</div>
+    );
+  }
 
-export default async function page() {
-  const { data } = await getUserResume();
-  // const resumes = await prisma.resume.findMany({
-  //   where: { ownerUserId: session.user.id as string },
-  //   orderBy: { createdAt: "desc" },
-  // });
-  const resumes: ResumeDTO[] = data.resumes;
+  if (isError) {
+    return (
+      <div className="container mx-auto w-full max-w-7xl mt-10">
+        Error: {error.message}
+      </div>
+    );
+  }
 
-  if (!resumes || resumes.length === 0) {
-    redirect("/initial");
+  const resumes: ResumeDTO[] = data?.data?.resumes || [];
+
+  if (resumes.length === 0) {
+    router.push("/initial");
   }
 
   return (
@@ -65,8 +80,8 @@ export default async function page() {
             </EmptyMedia>
             <EmptyTitle>No Resumes</EmptyTitle>
             <EmptyDescription>
-              You haven't added any resumes yet. Get started by uploading your
-              first resume.
+              You haven&apos;t added any resumes yet. Get started by uploading
+              your first resume.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>

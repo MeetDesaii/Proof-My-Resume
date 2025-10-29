@@ -8,10 +8,8 @@ export function getServerApiClient() {
       const { getToken } = await auth();
       return await getToken();
     },
-    onUnauthorized: async () => {},
-    requestConfig: {
-      timeout: 30_000,
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+    onUnauthorized: async () => {
+      console.log("User is not authenticated");
     },
   });
 

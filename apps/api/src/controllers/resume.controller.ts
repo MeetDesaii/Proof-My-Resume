@@ -10,8 +10,7 @@ import { extractTextFromBuffer } from "@visume/lib";
 import { Resume, ResumeReview, Suggestion } from "@visume/database";
 import { AppError, asyncHandler } from "../middleware/error.middleware";
 import { isValidMongoId, transformAIResponseForDB } from "../lib";
-import mongoose from "mongoose";
-import { ResumeReviewStatus } from "@visume/types/models/resume-review";
+import { ResumeReviewStatus } from "@visume/types";
 
 export const extractResumeInfo = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -94,7 +93,8 @@ export const getAllResumes = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
 
-    if (!userId) return next(new AppError(401, "Unauthorized"));
+    if (!userId)
+      return next(new AppError(401, `Unauthorized UserID: ${userId}`));
 
     const resumes = await Resume.find({
       owner: userId,

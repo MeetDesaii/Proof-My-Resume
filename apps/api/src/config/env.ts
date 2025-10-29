@@ -1,31 +1,41 @@
 import dotenv from "dotenv";
 import path from "path";
 
-/**
- * Load environment variables based on NODE_ENV
- * This module MUST be imported before any other application code
- */
 function loadEnvironment() {
   // Determine which env file to load
   const nodeEnv = process.env.NODE_ENV || "development";
-  const envFile =
-    nodeEnv === "production"
-      ? ".env"
-      : nodeEnv === "test"
-        ? ".env.test"
-        : ".env";
 
-  const envPath = path.resolve(process.cwd(), envFile);
-
-  // Load environment variables
-  const result = dotenv.config({ path: envPath });
-
-  if (result.error) {
-    console.error(`❌ Error loading environment file: ${envFile}`);
-    throw result.error;
+  // Skip .env loading in production environments (Railway, Render, etc.)
+  if (nodeEnv === "production") {
+    console.log(
+      "✓ Running in production mode - using platform environment variables"
+    );
+    return;
   }
 
-  console.log(`Environment loaded: ${envFile}`);
+  const envFile = nodeEnv === "test" ? ".env.test" : ".env.development";
+  const envPath = path.resolve(process.cwd(), envFile);
+
+  // Attempt to load environment variables (won't crash if file doesn't exist)
+  try {
+    const result = dotenv.config({ path: envPath });
+
+    if (result.error) {
+      // Check if error is due to missing file
+      if (result.error.message.includes("ENOENT")) {
+        console.log(
+          ` No ${envFile} file found - using system environment variables`
+        );
+      } else {
+        console.warn(`⚠️  Warning loading ${envFile}:`, result.error.message);
+      }
+    } else {
+      console.log(`✓ Environment loaded from: ${envFile}`);
+    }
+  } catch (error) {
+    // Gracefully handle any dotenv errors
+    console.log("Using system environment variables");
+  }
 }
 
 /**
@@ -47,10 +57,13 @@ function validateEnvironment() {
         missing.map((key) => `   - ${key}`).join("\n")
     );
     console.error(
-      `\n💡 Tip: Copy .env.example to .env.${process.env.NODE_ENV || "development"} and fill in the values`
+      `\nFor local development: Create a .env file with these variables` +
+        `\nFor production (Railway/Render): Set these in your platform dashboard`
     );
     throw new Error("Missing required environment variables");
   }
+
+  console.log("✓ All required environment variables are set");
 }
 
 // Load environment immediately when this module is imported
@@ -89,18 +102,6 @@ export const config = {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
     from: process.env.EMAIL_FROM,
-  },
-
-  // File Storage
-  fileStorage: {
-    type: (process.env.FILE_STORAGE_TYPE as "local" | "s3") || "local",
-    uploadDir: process.env.UPLOAD_DIR || "uploads",
-    aws: {
-      region: process.env.AWS_REGION,
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      s3Bucket: process.env.AWS_S3_BUCKET,
-    },
   },
 
   // Logging

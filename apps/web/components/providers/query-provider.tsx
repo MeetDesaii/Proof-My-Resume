@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -15,20 +14,14 @@ export function QueryProvider({ children }: QueryProviderProps) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000, // 1 minute
+            // Always run queries regardless of online/offline detection
+            networkMode: "always",
+            // Ensure queries run on mount
+            refetchOnMount: true,
             refetchOnWindowFocus: false,
-            retry: (failureCount, error) => {
-              // Don't retry on 4xx errors (client errors)
-              if (error instanceof Error && "status" in error) {
-                const status = (error as any).status;
-                if (status >= 400 && status < 500) return false;
-              }
-              // Retry up to 3 times for other errors
-              return failureCount < 3;
-            },
-          },
-          mutations: {
-            retry: false, // Don't retry mutations by default
+            // Keep data for 1 minute before considering it stale
+            staleTime: 60 * 1000,
+            retry: 1,
           },
         },
       })
@@ -37,7 +30,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>
   );
 }

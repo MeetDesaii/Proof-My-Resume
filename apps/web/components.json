@@ -16,5 +16,8 @@
     "lib": "@/lib",
     "utils": "@visume/ui/lib/utils",
     "ui": "@visume/ui/components"
+  },
+  "registries": {
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json"
   }
 }

@@ -1,25 +1,24 @@
-# Visume AI
+# shadcn/ui monorepo template
 
-**An intelligent resume optimization tool powered by AI and NLP, and Multisource verification by AI Agents.**
+This template is for creating a monorepo with shadcn/ui.
 
-**Goal Tracker - https://www.notion.so/289a33133a3a80f8a630d2edf775009e?v=289a33133a3a8016834f000c66b9daf6**
+## Usage
 
-## 🚀 Overview
+```bash
+pnpm dlx shadcn@latest init
+```
 
-**Visume AI** is a web application that analyzes and enhances resumes to increase their chances of passing Applicant Tracking Systems (ATS). By leveraging AI and NLP, it assesses resumes against job descriptions, providing actionable insights and recommendations for improvement.
+## Adding components
 
-## 🧩 Features
+To add components to your app, run the following command at the root of your `web` app:
 
-- **ATS Compatibility Analysis**: Evaluates how well a resume aligns with ATS algorithms.
-- **Keyword Optimization**: Identifies missing keywords and suggests additions to match job descriptions.
-- **End-to-End Authentication**: Authentication flow uses Clerk for secure and encrypted authentication. 
-- **Formatting Recommendations**: Advises on formatting changes to improve readability and ATS parsing.
-- **AI Agents**: To verify all the contained information.
-- **Real-Time Feedback**: Provides instant suggestions as users upload their resumes.
-- **Multi-Format Support**: Accepts resumes in various formats, including PDF and DOCX.
+```bash
+pnpm dlx shadcn@latest add button -c apps/web
+```
 
-## ⚙️ Tech Stack
+This will place the ui components in the `packages/ui/src/components` directory.
 
+<<<<<<< Updated upstream
 - **Frontend**: NextJS 15 with App Router, TypeScript, Tailwind CSS, Shadcn
 - **Backend**: Node.js, Express.js, MongoDB, Mangoose, OpenAI
 - **AI/NLP**: OpenAI GPT-4.1 mini, OpenAI GPT-4.1
@@ -29,88 +28,16 @@
 - **Storage**: AWS S3 Bucket
   
 ## 🛠️ Installation
+=======
+## Tailwind
+>>>>>>> Stashed changes
 
-### Prerequisites
+Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
 
-Ensure you have the following installed:
+## Using components
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
+To use the components in your app, import them from the `ui` package.
 
-### Steps
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/MeetDesaii/Visume-AI-Dev.git
-   cd Visume-AI-Dev
-
-2. **Install Dependencies**
-
-   ```bash
-   pnpm i
-   ```
-
-3. **Environment Variables**
-
-   Create a `.env.development` file in both the `apps/api` directory with the following variables:
-
-   ```env
-    NODE_ENV=development
-
-    # Server Configuration
-    PORT=4000
-    HOST=localhost
-    FRONTEND_URL=http://localhost:3000
-    
-    # Database
-    MONGODB_URI=" "
-    
-    # Redis (Optional - for caching and rate limiting)
-    REDIS_URL=redis://localhost:6379
-    # REDIS_PASSWORD=
-    
-    # Clerk Authentication (Required)
-    CLERK_PUBLISHABLE_KEY=" "
-    CLERK_SECRET_KEY=" "
-    CLERK_WEBHOOK_SECRET=" "
-    
-    # OpenAI API (Required)
-    OPENAI_API_KEY=" "
-   
-    # Email Configuration (Optional - for notifications)
-    SMTP_HOST=smtp.gmail.com
-    SMTP_PORT=587
-    SMTP_USER=visumeai@gmail.com
-    SMTP_PASS=" "
-    EMAIL_FROM="Visume AI <noreply@visume.ai>"
-    
-    
-    # Logging
-    LOG_DIR=logs
-    LOG_LEVEL=debug
-   ```
-   
-   Create a `.env` file in both the `apps/web` directory with the following variables:
-  
-   ```env
-    NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-    NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
-    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
-    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/dashboard
-    
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=" "
-    CLERK_SECRET_KEY=" "
-     
-    
-    NEXT_PUBLIC_API_BASE_URL=http://localhost:4000/api
-   ```
-
-4. **Run the Application**
-
-   ```bash
-   pnpm dev
-   ```
-
-   The application should now be running at [http://localhost:3000](http://localhost:3000).
+```tsx
+import { Button } from "@visume/ui/components/button";
+```

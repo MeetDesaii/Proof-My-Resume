@@ -2,7 +2,7 @@ import {
   SuggestionsAcceptanceStatus,
   SuggestionsOperationAction,
   SuggestionsPriority,
-} from "@visume/types/models/suggestions";
+} from "@visume/types";
 import mongoose, { Schema, Types } from "mongoose";
 
 const SuggestionsOperationSchema = new Schema(

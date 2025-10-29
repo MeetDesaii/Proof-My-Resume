@@ -271,7 +271,7 @@ export const ResumeExtractionSchema = z
       .string()
       .trim()
       .describe(
-        "Full name of the candidate as it appears at the top of the resume (REQUIRED)"
+        "The name of the resume. Which post is resume about. e.g. Full Stack Web Developer, Mobile Developer, Android Developer etc. (REQUIRED)"
       ),
     firstName: z.string().trim().describe("First/given name only (REQUIRED)"),
     lastName: z.string().trim().describe("Last/family name only (REQUIRED)"),

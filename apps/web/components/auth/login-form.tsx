@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, LogIn, Shield } from "lucide-react";
+import { Loader2, LogIn, Shield, AlertCircle } from "lucide-react";
+import { IconBrandGoogleFilled } from "@tabler/icons-react";
 import { Button } from "@visume/ui/components/button";
 import { Input } from "@visume/ui/components/input";
 import Link from "next/link";
 import { cn } from "@visume/ui/lib/utils";
 import { useSignIn } from "@clerk/nextjs";
 import z from "zod";
-import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -20,18 +19,32 @@ import {
   FormLabel,
   FormMessage,
 } from "@visume/ui/components/form";
+import { useMutation } from "@tanstack/react-query";
 
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
+
+type SignInFormValues = z.infer<typeof signInSchema>;
+
+interface ClerkError {
+  errors?: Array<{
+    message: string;
+    longMessage?: string;
+    code?: string;
+  }>;
+  message?: string;
+}
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const { isLoaded, signIn, setActive } = useSignIn();
+  const router = useRouter();
 
-  const form = useForm<z.infer<typeof signInSchema>>({
+  const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -39,14 +52,13 @@ export function LoginForm({
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  // Sign-in mutation
+  const signInMutation = useMutation({
+    mutationFn: async (values: SignInFormValues) => {
+      if (!isLoaded || !signIn) {
+        throw new Error("Sign in is not ready");
+      }
 
-  const onSubmit = async (values: z.infer<typeof signInSchema>) => {
-    if (!isLoaded) return;
-
-    setIsLoading(true);
-    try {
       const result = await signIn.create({
         identifier: values.email,
         password: values.password,
@@ -54,33 +66,72 @@ export function LoginForm({
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        router.push("/dashboard");
+        return result;
       }
-    } catch (error: any) {
-      toast.error(error.errors?.[0]?.message || "Invalid email or password");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  async function signInWith(strategy: "oauth_google" | "oauth_linkedin") {
-    if (!isLoaded) return;
+      throw new Error("Sign in incomplete");
+    },
+    onSuccess: () => {
+      router.push("/dashboard/resumes");
+    },
+    onError: (error: ClerkError) => {
+      // Extract error message from Clerk error format
+      const errorMessage =
+        error.errors?.[0]?.longMessage ||
+        error.errors?.[0]?.message ||
+        error.message ||
+        "Invalid email or password. Please try again.";
 
-    try {
+      // Set form-level error
+      form.setError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
+    },
+  });
+
+  // OAuth mutation
+  const oauthMutation = useMutation({
+    mutationFn: async (strategy: "oauth_google" | "oauth_linkedin") => {
+      if (!isLoaded || !signIn) {
+        throw new Error("Sign in is not ready");
+      }
+
       await signIn.authenticateWithRedirect({
         strategy,
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/dashboard",
+        redirectUrlComplete: "/dashboard/resumes",
       });
-    } catch (error: any) {
-      toast.error(error.errors?.[0]?.message || "Failed to sign in");
-    }
-  }
+    },
+    onError: (error: ClerkError) => {
+      const errorMessage =
+        error.errors?.[0]?.longMessage ||
+        error.errors?.[0]?.message ||
+        error.message ||
+        "Failed to sign in with OAuth. Please try again.";
+
+      form.setError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
+    },
+  });
+
+  const onSubmit = (values: SignInFormValues) => {
+    signInMutation.mutate(values);
+  };
+
+  const signInWith = (strategy: "oauth_google" | "oauth_linkedin") => {
+    oauthMutation.mutate(strategy);
+  };
+
+  const isLoading = signInMutation.isPending || oauthMutation.isPending;
+  const formError = form.formState.errors.root?.message;
 
   return (
     <div
       className={cn(
-        "flex flex-col gap-6 bg-white dark:bg-black/50 backdrop-blur-sm rounded-2xl p-6 shadow dark:shadow-2xl",
+        "flex flex-col gap-6 bg-background border dark:bg-black/50 backdrop-blur-sm rounded-2xl p-6 shadow dark:shadow-2xl",
         className
       )}
       {...props}
@@ -113,16 +164,7 @@ export function LoginForm({
             onClick={() => signInWith("oauth_google")}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path
-                  d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                  fill="currentColor"
-                />
-              </svg>
-            )}
+            <IconBrandGoogleFilled />
             Continue with Google
           </Button>
         </div>
@@ -134,6 +176,17 @@ export function LoginForm({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
+              {formError && (
+                <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 dark:border-red-900/50 dark:bg-red-950/50 p-3">
+                  <AlertCircle className="size-4 text-red-600 dark:text-red-500 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-red-800 dark:text-red-400">
+                      {formError}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <FormField
                 control={form.control}
                 name="email"
@@ -144,6 +197,7 @@ export function LoginForm({
                       <Input
                         type="email"
                         placeholder="john.doe@example.com"
+                        disabled={isLoading}
                         {...field}
                       />
                     </FormControl>
@@ -161,6 +215,7 @@ export function LoginForm({
                       <Input
                         type="password"
                         placeholder="••••••••"
+                        disabled={isLoading}
                         {...field}
                       />
                     </FormControl>
@@ -170,8 +225,17 @@ export function LoginForm({
               />
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? <Loader2 className="animate-spin" /> : <LogIn />}
-                Log in
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Log in
+                  </>
+                )}
               </Button>
             </div>
           </form>

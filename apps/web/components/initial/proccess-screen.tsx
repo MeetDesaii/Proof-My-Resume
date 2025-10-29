@@ -114,10 +114,10 @@ export default function ProccessScreen({
   }, []);
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-10">
       <div className="space-y-2 text-center">
-        <h1 className="text-primary text-2xl">Setting up your dashboard...</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-primary text-3xl">Setting up your dashboard...</h1>
+        <p className="text-base text-neutral-500">
           This could take upto 2 minutes, please stay on this page...
         </p>
       </div>
@@ -125,7 +125,7 @@ export default function ProccessScreen({
       <div className="space-y-5">
         <div className={`flex gap-3 text-lg items-center`}>
           {currentStep === "analyze-job" ? (
-            <Loader2 className="animate-spin text-blue-500" />
+            <Loader2 className="animate-spin text-primary" />
           ) : (
             <CheckCircle2 className="text-green-500" />
           )}
@@ -146,7 +146,7 @@ export default function ProccessScreen({
           {currentStep === "analyze-job" ? (
             <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
           ) : currentStep === "parse-resume" ? (
-            <Loader2 className="animate-spin text-blue-500" />
+            <Loader2 className="animate-spin text-primary" />
           ) : (
             <CheckCircle2 className="text-green-500" />
           )}

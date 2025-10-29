@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2, UserPlus, Shield } from "lucide-react";
+import { Loader2, UserPlus, Shield, AlertCircle } from "lucide-react";
 import { Button } from "@visume/ui/components/button";
 import { Input } from "@visume/ui/components/input";
 import Link from "next/link";
@@ -17,9 +16,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@visume/ui/components/form";
-import { toast } from "sonner";
 import { useSignUp } from "@clerk/nextjs";
 import { cn } from "@visume/ui/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface SignupFormProps {
   className?: string;
@@ -38,16 +38,25 @@ const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+type SignUpFormValues = z.infer<typeof signUpSchema>;
+
+interface ClerkError {
+  errors?: Array<{
+    message: string;
+    longMessage?: string;
+    code?: string;
+  }>;
+  message?: string;
+}
+
 export function RegisterForm({
   className,
   ...props
 }: SignupFormProps & React.ComponentProps<"div">) {
-  const [isLoading, setIsLoading] = useState(false);
-  const { isLoaded, signUp, setActive } = useSignUp();
-
+  const { isLoaded, signUp } = useSignUp();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof signUpSchema>>({
+  const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       firstName: "",
@@ -58,12 +67,13 @@ export function RegisterForm({
     },
   });
 
-  const handleSubmit = async (values: z.infer<typeof signUpSchema>) => {
-    console.log("🚀 ~ handleSubmit ~ values:", values);
-    if (!isLoaded) return;
+  // Sign-up mutation
+  const signUpMutation = useMutation({
+    mutationFn: async (values: SignUpFormValues) => {
+      if (!isLoaded || !signUp) {
+        throw new Error("Sign up is not ready");
+      }
 
-    setIsLoading(true);
-    try {
       await signUp.create({
         firstName: values.firstName,
         lastName: values.lastName,
@@ -75,31 +85,67 @@ export function RegisterForm({
         strategy: "email_code",
       });
 
+      return verificationEmail;
+    },
+    onSuccess: (verificationEmail) => {
       if (verificationEmail.status === "missing_requirements") {
+        toast.success("Verification code sent to your email");
         router.push("/verify");
       }
+    },
+    onError: (error: ClerkError) => {
+      // Extract error message from Clerk error format
+      const errorMessage =
+        error.errors?.[0]?.longMessage ||
+        error.errors?.[0]?.message ||
+        error.message ||
+        "Failed to create account. Please try again.";
 
-      toast.success("Verification code sent to your email");
-    } catch (error: any) {
-      toast.error(error.errors?.[0]?.message || "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      // Set form-level error
+      form.setError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
+    },
+  });
 
-  async function signUpWith(strategy: "oauth_google" | "oauth_linkedin") {
-    if (!isLoaded) return;
+  // OAuth mutation
+  const oauthMutation = useMutation({
+    mutationFn: async (strategy: "oauth_google" | "oauth_linkedin") => {
+      if (!isLoaded || !signUp) {
+        throw new Error("Sign up is not ready");
+      }
 
-    try {
       await signUp.authenticateWithRedirect({
         strategy,
         redirectUrl: "/sso-callback",
         redirectUrlComplete: "/dashboard",
       });
-    } catch (error: any) {
-      toast.error(error.errors?.[0]?.message || "Failed to sign up");
-    }
-  }
+    },
+    onError: (error: ClerkError) => {
+      const errorMessage =
+        error.errors?.[0]?.longMessage ||
+        error.errors?.[0]?.message ||
+        error.message ||
+        "Failed to sign up with OAuth. Please try again.";
+
+      form.setError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
+    },
+  });
+
+  const handleSubmit = (values: SignUpFormValues) => {
+    signUpMutation.mutate(values);
+  };
+
+  const signUpWith = (strategy: "oauth_google" | "oauth_linkedin") => {
+    oauthMutation.mutate(strategy);
+  };
+
+  const isLoading = signUpMutation.isPending || oauthMutation.isPending;
+  const formError = form.formState.errors.root?.message;
 
   return (
     <div
@@ -130,19 +176,23 @@ export function RegisterForm({
         </div>
         <div className="grid gap-4 sm:grid-cols-1">
           <Button
-            variant="secondary"
+            variant="outline"
             type="button"
             size="lg"
             className="w-full"
             onClick={() => signUpWith("oauth_google")}
             disabled={isLoading}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path
-                d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                fill="currentColor"
-              />
-            </svg>
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                  fill="currentColor"
+                />
+              </svg>
+            )}
             Continue with Google
           </Button>
         </div>
@@ -156,6 +206,18 @@ export function RegisterForm({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-6"
           >
+            {/* Display form-level errors */}
+            {formError && (
+              <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:border-red-900/50 dark:bg-red-950/50 p-4">
+                <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-500 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-400">
+                    {formError}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center gap-4 ">
               <FormField
                 control={form.control}
@@ -164,7 +226,11 @@ export function RegisterForm({
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John" {...field} />
+                      <Input
+                        placeholder="John"
+                        disabled={isLoading}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -177,7 +243,11 @@ export function RegisterForm({
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Doe" {...field} />
+                      <Input
+                        placeholder="Doe"
+                        disabled={isLoading}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -194,6 +264,7 @@ export function RegisterForm({
                     <Input
                       type="email"
                       placeholder="john.doe@example.com"
+                      disabled={isLoading}
                       {...field}
                     />
                   </FormControl>
@@ -209,7 +280,12 @@ export function RegisterForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      disabled={isLoading}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -223,7 +299,12 @@ export function RegisterForm({
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      disabled={isLoading}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -235,8 +316,17 @@ export function RegisterForm({
               className="w-full"
               disabled={isLoading}
             >
-              {isLoading ? <Loader2 className="animate-spin" /> : <UserPlus />}
-              Sign up
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Sign up
+                </>
+              )}
             </Button>
           </form>
         </Form>

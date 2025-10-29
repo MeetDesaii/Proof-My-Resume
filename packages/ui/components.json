@@ -13,8 +13,13 @@
   "aliases": {
     "components": "@visume/ui/components",
     "utils": "@visume/ui/lib/utils",
-    "hooks": "@visume/ui/hooks",
+    "ui": "@visume/ui/components",
     "lib": "@visume/ui/lib",
-    "ui": "@visume/ui/components"
+    "hooks": "@visume/ui/hooks"
+  },
+  "registries": {
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json",
+    "@blocks": "https://blocks.so/r/{name}.json",
+    "@tailark": "https://tailark.com/r/{name}.json"
   }
 }

@@ -18,7 +18,6 @@ export default function ResumeInfoList({
 }: {
   resume: ResumeWithOutJob;
 }) {
-  console.log("🚀 ~ ResumeInfoList ~ resume:", resume);
   const [isSectionViewOpen, setIsSectionViewOpen] = useState(false);
   const [currentOpenedSection, setCurrentOpenedSection] =
     useState<Section | null>(null);
@@ -29,20 +28,21 @@ export default function ResumeInfoList({
         <>
           {sections.map((section) => (
             <div
-              className="px-4 py-4 border-b cursor-pointer flex justify-between items-center group hover:bg-accent/30"
+              key={section.id}
+              className="px-4 py-2.5 border-b cursor-pointer flex justify-between items-center group hover:bg-accent"
               onClick={() => {
                 setCurrentOpenedSection(section);
                 setIsSectionViewOpen(true);
               }}
             >
-              <div className="flex gap-4">
-                <section.icon className="text-neutral-600 group-hover:text-black" />
-                <p className="text-neutral-600 group-hover:text-black">
+              <div className="flex gap-3">
+                <section.icon className="text-secondary-foreground group-hover:text-black dark:group-hover:text-white  size-4" />
+                <h5 className="text-secondary-foreground dark:group-hover:text-white text-sm group-hover:text-black">
                   {section.name}
-                </p>
+                </h5>
               </div>
 
-              <PlusSquare className="text-black opacity-0 group-hover:opacity-100 " />
+              <PlusSquare className="text-black opacity-0 group-hover:opacity-100 size-4 dark:group-hover:text-white" />
             </div>
           ))}
         </>
@@ -97,7 +97,7 @@ export default function ResumeInfoList({
                 ).map((work) => (
                   <div
                     key={work._id}
-                    className="border bg-white  rounded-md p-3 shadow space-y-2"
+                    className="border bg-card  rounded-md p-3 shadow space-y-2"
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex gap-3 items-center">
@@ -135,7 +135,7 @@ export default function ResumeInfoList({
                 {resume.educations.map((edu) => (
                   <div
                     key={edu._id}
-                    className="border bg-white  rounded-md p-3 shadow space-y-2"
+                    className="border bg-card  rounded-md p-3 shadow space-y-2"
                   >
                     <h4 className="font-medium">{edu.institutionName}</h4>
                     <p className="text-sm text-muted-foreground">
@@ -156,7 +156,7 @@ export default function ResumeInfoList({
                   {resume.skillsCategories.map((skill) => (
                     <div
                       key={skill._id}
-                      className="space-y-4 bg-white py-4 px-3 rounded-md shadow-sm border"
+                      className="space-y-4 bg-card py-4 px-3 rounded-md shadow-sm border"
                     >
                       <Label>{skill.categoryName}</Label>
                       <div className="flex flex-wrap gap-3">
@@ -183,7 +183,7 @@ export default function ResumeInfoList({
                     </span>
                   </h3>
 
-                  <div className="space-y-4 bg-white py-4 px-3 rounded-md shadow-sm border">
+                  <div className="space-y-4 bg-card py-4 px-3 rounded-md shadow-sm border">
                     <Label>Must Have</Label>
                     <div className="flex flex-wrap gap-3">
                       {resume.job.keywords
@@ -199,7 +199,7 @@ export default function ResumeInfoList({
                         ))}
                     </div>
                   </div>
-                  <div className="space-y-4 bg-white py-4 px-3 rounded-md shadow-sm border">
+                  <div className="space-y-4 bg-card py-4 px-3 rounded-md shadow-sm border">
                     <Label>Nice to Have</Label>
                     <div className="flex flex-wrap gap-3">
                       {resume.job.keywords
@@ -223,7 +223,7 @@ export default function ResumeInfoList({
                 {resume.projects.map((project) => (
                   <div
                     key={project._id}
-                    className="border bg-white  rounded-md p-3 shadow space-y-2"
+                    className="border bg-card  rounded-md p-3 shadow space-y-2"
                   >
                     <h4 className="font-medium">{project.title}</h4>
                     <p className="text-sm text-muted-foreground">

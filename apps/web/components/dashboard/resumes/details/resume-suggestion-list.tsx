@@ -8,15 +8,13 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@visume/ui/components/empty";
-import { Sparkles } from "lucide-react";
-import { Button } from "@visume/ui/components/button";
-import { ResumeReview } from "@visume/types/models/resume-review";
+import { ArrowDown, Sparkles } from "lucide-react";
 import { Label } from "@visume/ui/components/label";
 import { ScrollArea } from "@visume/ui/components/scroll-area";
 import { Badge } from "@visume/ui/components/badge";
 import { sortSuggestions } from "@/lib/sortSuggestions";
 import { cn } from "@visume/ui/lib/utils";
-import { ResumeWithOutJob } from "@visume/types";
+import { ResumeReview, ResumeWithOutJob } from "@visume/types";
 import TailorResume from "./tailor-resume";
 import { Separator } from "@visume/ui/components/separator";
 
@@ -96,13 +94,13 @@ export default function ResumeSuggestionsList({
               className={cn(
                 "py-4 px-3 rounded-md shadow-sm border mx-3 mb-3 transition-all ease-out",
                 item.priority === "RECOMMENDED"
-                  ? "bg-primary/10 hover:bg-primary/30 hover:ring-primary ring-2 ring-transparent"
-                  : "bg-destructive/15 hover:bg-destructive/30 hover:ring-destructive ring-2 ring-transparent"
+                  ? "bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 hover:ring-primary ring-2 ring-transparent"
+                  : "bg-destructive/15 dark:bg-destructive/20 hover:bg-destructive/20 hover:ring-destructive ring-2 ring-transparent"
               )}
               key={item._id}
             >
               <div className="flex justify-between items-center">
-                <h4 className="text-sm font-semibold text-black/70">
+                <h4 className="text-sm font-semibold text-accent-foreground">
                   {item.title}
                 </h4>
                 <Badge
@@ -117,7 +115,7 @@ export default function ResumeSuggestionsList({
                   {item.priority}
                 </Badge>
               </div>
-              <p className="text-sm mt-3.5 text-neutral-700 ">
+              <p className="text-sm mt-3.5 text-muted-foreground ">
                 {item.description}
               </p>
 
@@ -126,29 +124,66 @@ export default function ResumeSuggestionsList({
                 className={cn(
                   "my-4",
                   item.priority === "RECOMMENDED"
-                    ? "bg-primary/50 "
-                    : "bg-destructive/50 "
+                    ? "bg-primary/40 "
+                    : "bg-destructive/40 "
                 )}
               />
               <div className="space-y-4">
                 {item.operation.actual && item.operation.actual !== "" ? (
                   <div>
-                    <Label className="mb-2">Actual</Label>
-                    <span className="text-sm line-through ">
-                      {item.operation.actual}
-                    </span>
+                    {item.operation.action === "REPLACE" ? (
+                      <span className="text-sm line-through">
+                        {item.operation.actual}
+                      </span>
+                    ) : item.sectionName.includes("Skills") ? (
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "line-through",
+                          item.priority === "RECOMMENDED"
+                            ? "border-primary/40 text-primary"
+                            : "border-destructive/40 text-destructive"
+                        )}
+                      >
+                        {item.operation.actual}
+                      </Badge>
+                    ) : (
+                      <span className="text-sm line-through">
+                        {item.operation.actual}
+                      </span>
+                    )}
                   </div>
                 ) : null}
                 {item.operation.value && item.operation.value !== "" ? (
                   <div>
-                    <Label className="mb-2">
-                      {item.operation.action === "REPLACE"
-                        ? "Replace"
-                        : item.operation.action === "ADD"
-                          ? "Add"
-                          : "Remove"}
-                    </Label>
-                    <span className="text-sm">{item.operation.value}</span>
+                    <div className="mb-2 w-full">
+                      {item.operation.action === "REPLACE" ? (
+                        <div className="flex justify-center items-center py-1">
+                          <ArrowDown className="size-4 text-center" />
+                        </div>
+                      ) : item.operation.action === "ADD" ? (
+                        <Label>Add</Label>
+                      ) : (
+                        <Label>Remove</Label>
+                      )}
+                    </div>
+
+                    {item.operation.action === "REPLACE" ? (
+                      <span className="text-sm">{item.operation.value}</span>
+                    ) : item.sectionName.includes("Skill") ? (
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          item.priority === "RECOMMENDED"
+                            ? "border-primary/40 text-primary"
+                            : "border-destructive/40 text-destructive"
+                        )}
+                      >
+                        {item.operation.value}
+                      </Badge>
+                    ) : (
+                      <span className="text-sm ">{item.operation.value}</span>
+                    )}
                   </div>
                 ) : null}
               </div>

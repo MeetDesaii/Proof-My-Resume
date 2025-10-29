@@ -1,8 +1,5 @@
-import { ResumeReviewStatus } from "@visume/types/models/resume-review";
-import {
-  SuggestionsAcceptanceStatus,
-  SuggestionsPriority,
-} from "@visume/types/models/suggestions";
+import { ResumeReviewStatus } from "@visume/types";
+
 import mongoose, { Schema, Types } from "mongoose";
 
 const ResumeReviewSchema = new Schema(

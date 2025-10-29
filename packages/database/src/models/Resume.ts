@@ -151,7 +151,7 @@ const resumeSchema = new Schema(
     lastName: {
       type: String,
       trim: true,
-      required: true,
+      default: "",
       maxlength: 80,
       index: true,
     },

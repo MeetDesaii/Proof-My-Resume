@@ -406,7 +406,7 @@ export function ResumeTextPreview({ text, className }: ResumeTextPreviewProps) {
 
   return (
     <div className={cn("w-full h-full", className)}>
-      <div className="w-full h-full bg-white shadow-sm">
+      <div className="w-full h-full bg-muted shadow-sm">
         <div className="h-full overflow-y-auto p-12 print:p-12">
           <article aria-label="Resume preview">
             {/* Render header */}

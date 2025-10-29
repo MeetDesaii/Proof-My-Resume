@@ -7,75 +7,75 @@ import {
   TabsList,
   TabsTrigger,
 } from "@visume/ui/components/tabs";
-import { ResumeWithOutJob } from "@visume/types";
-import {
-  BookMarked,
-  Box,
-  Briefcase,
-  FolderOpenDot,
-  GraduationCap,
-  LinkIcon,
-  LucideProps,
-  ScrollText,
-  User,
-} from "lucide-react";
+import { ResumeReview, ResumeWithOutJob } from "@visume/types";
+import { Sparkles, Text } from "lucide-react";
 import ResumeInfoList from "./resume-info-list";
 import ResumeSuggestionsList from "./resume-suggestion-list";
-import { ResumeReview } from "@visume/types/models/resume-review";
+import {
+  Icon,
+  IconBlocks,
+  IconBooks,
+  IconBriefcase,
+  IconBriefcase2,
+  IconBubbleText,
+  IconCertificate,
+  IconFolder,
+  IconLink,
+  IconProps,
+  IconUser,
+} from "@tabler/icons-react";
 
 export type Section = {
   name: string;
   id: string;
-  icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-  >;
+  icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
 };
 
 export const sections: Section[] = [
   {
     name: "Summary",
     id: "summary",
-    icon: ScrollText,
+    icon: IconBubbleText,
   },
   {
     name: "Personal Info",
     id: "personalInfo",
-    icon: User,
+    icon: IconUser,
   },
   {
     name: "Work Experience",
     id: "workExperience",
-    icon: Briefcase,
+    icon: IconBriefcase2,
   },
   {
     name: "Volunteer Experience",
     id: "volunteerExperience",
-    icon: Briefcase,
+    icon: IconBriefcase,
   },
   {
     name: "Education",
     id: "education",
-    icon: GraduationCap,
+    icon: IconBooks,
   },
   {
     name: "Certifications",
     id: "certifications",
-    icon: BookMarked,
+    icon: IconCertificate,
   },
   {
     name: "Skills",
     id: "skills",
-    icon: Box,
+    icon: IconBlocks,
   },
   {
     name: "Projects",
     id: "projects",
-    icon: FolderOpenDot,
+    icon: IconFolder,
   },
   {
     name: "Links",
     id: "links",
-    icon: LinkIcon,
+    icon: IconLink,
   },
 ];
 
@@ -90,8 +90,14 @@ export default function ResumeContent({
     <div>
       <Tabs defaultValue="info">
         <TabsList className="border-b w-full rounded-none">
-          <TabsTrigger value="info">Information</TabsTrigger>
-          <TabsTrigger value="sugggestions">Suggestions</TabsTrigger>
+          <TabsTrigger value="info">
+            <Text />
+            Information
+          </TabsTrigger>
+          <TabsTrigger value="sugggestions">
+            <Sparkles />
+            Suggestions
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="info">
